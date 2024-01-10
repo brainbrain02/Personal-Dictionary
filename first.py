@@ -6,23 +6,27 @@ import random
 import sys
 
 class First(QWidget):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    def __init__(self, storage):
+        super().__init__()
         uic.loadUi('first.ui', self)
 
         ### Main function setup
-        self.func = FlashCardFunction()
+        self.storage = storage
+        self.func = FlashCardFunction(self.storage)
         # Open current dictionary
-        current_word = self.func.read_current_dict()
+        # current_word = self.func.read_current_dict()
+        current_word = self.func.choose_word(self.storage.current_dict)
         if current_word:
-            self.update_mean_text(current_word)
+            self.update_mean_text(current_word[1])
         else:
             message = QMessageBox()
             message.setText("Can not read the current dictionary!")
             message.exec_()
 
         # Check answer box is empty
-        self.enter_btn.clicked.connect(lambda: self.handle_ans_enter(self.ans_entry.text()))
+        self.enter_btn.clicked.connect(
+            lambda: self.handle_ans_enter(self.ans_entry.text())
+            )
 
         # Install an event filter to capture key events
         self.ans_entry.installEventFilter(self)
@@ -36,12 +40,15 @@ class First(QWidget):
             # Check answer correctness
             word = self.func.check_ans_correct(ans)
             if word:
-                self.update_mean_text(f"Wrong Answer!\nThe answer should be: {word}\n")
+                self.update_mean_text(
+                    f"Wrong Answer!\nThe answer should be: {word}\n"
+                    )
                 loop = QEventLoop()
                 QTimer.singleShot(2000, loop.quit)
                 loop.exec_()
             # Generating next word
-            # should I cross over the function parameter and directly control the upper layer object?
+            # should I cross over the function parameter 
+            # and directly control the upper layer object?
             self.ans_entry.clear()
             self.func.dict_list.remove(self.func.random_line)
             self.func.handle_empty_dict()
@@ -54,16 +61,20 @@ class First(QWidget):
                 message.exec_()
 
     def eventFilter(self, obj, event):
-        if obj == self.ans_entry and event.type() == event.KeyPress and event.key() == Qt.Key_Return:
+        if obj == self.ans_entry and event.type() == event.KeyPress \
+            and event.key() == Qt.Key_Return:
             self.handle_ans_enter(self.ans_entry.text())
             return True
         return super().eventFilter(obj, event)
 
 class FlashCardFunction():
-    def __init__(self):
-        self.wrong_list = []
-        self.correct_list = []
-        self.dict_list = []
+    def __init__(self, storage):
+        # self.wrong_list = []
+        # self.correct_list = []
+        # self.dict_list = []
+        self.dict_list = storage.current_dict
+        self.wrong_list = storage.wrong_answer_list
+        self.correct_list = storage.correct_answer_list
 
     def check_answer_enterd(self, ans):
         if not ans:
@@ -100,7 +111,7 @@ class FlashCardFunction():
             return
     
     def form_pair(self, list):
-        pair = ':'.join(list)
+        pair = f"{list[0]}:{list[1]}\n"
         return pair
 
     def write_to_file(self, path, list):
@@ -117,7 +128,8 @@ class FlashCardFunction():
         if not self.dict_list:
             if not self.correct_list:
                 message = QMessageBox()
-                message.setText("Well, you got none of them correct!\nCan't help you!")
+                message.setText("Well, you got none of them correct!\
+                                \nCan't help you!")
                 message.exec_()
             self.dict_list = self.correct_list[:]
             self.correct_list = []

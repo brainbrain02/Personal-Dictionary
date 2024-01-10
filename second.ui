@@ -33,24 +33,6 @@
     <string>Flash Card</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="word_entry">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>30</y>
-     <width>581</width>
-     <height>61</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>16</pointsize>
-    </font>
-   </property>
-   <property name="placeholderText">
-    <string>Please enter the word here</string>
-   </property>
-  </widget>
   <widget class="QTextEdit" name="meaning_entry">
    <property name="geometry">
     <rect>
@@ -63,13 +45,14 @@
    <property name="font">
     <font>
      <pointsize>14</pointsize>
+     <italic>false</italic>
     </font>
    </property>
    <property name="placeholderText">
     <string>Please enter the meaning of the word here</string>
    </property>
   </widget>
-  <widget class="QPushButton" name="pushButton">
+  <widget class="QPushButton" name="enter_btn">
    <property name="geometry">
     <rect>
      <x>30</x>
@@ -87,6 +70,27 @@
    </property>
    <property name="text">
     <string>Enter</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="word_entry">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>40</y>
+     <width>561</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+     <weight>50</weight>
+     <italic>false</italic>
+     <bold>false</bold>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the word here</string>
    </property>
   </widget>
  </widget>
