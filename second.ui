@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>640</width>
-    <height>492</height>
+    <width>639</width>
+    <height>421</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,14 +16,77 @@
   <widget class="QPushButton" name="change_btn">
    <property name="geometry">
     <rect>
-     <x>300</x>
-     <y>180</y>
-     <width>75</width>
-     <height>23</height>
+     <x>470</x>
+     <y>320</y>
+     <width>131</width>
+     <height>41</height>
     </rect>
    </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
    <property name="text">
-    <string>PushButton</string>
+    <string>Flash Card</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="word_entry">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>30</y>
+     <width>581</width>
+     <height>61</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>16</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the word here</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="meaning_entry">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>120</y>
+     <width>581</width>
+     <height>171</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the meaning of the word here</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>30</x>
+     <y>320</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Enter</string>
    </property>
   </widget>
  </widget>

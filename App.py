@@ -1,8 +1,10 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
+from PyQt5.QtCore import Qt
 from first import First, FlashCardFunction
 from second import Second
 from constant import *
+import sys
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,7 +36,6 @@ class MainWindow(QMainWindow):
         else:
             event.ignore()
         
-
 if __name__ == '__main__':
     app = QApplication([])
     window = MainWindow()

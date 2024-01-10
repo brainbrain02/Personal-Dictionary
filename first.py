@@ -3,7 +3,7 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from constant import *
 import random
-import time
+import sys
 
 class First(QWidget):
     def __init__(self, *args, **kwargs):
@@ -23,26 +23,41 @@ class First(QWidget):
 
         # Check answer box is empty
         self.enter_btn.clicked.connect(lambda: self.handle_ans_enter(self.ans_entry.text()))
-    
+
+        # Install an event filter to capture key events
+        self.ans_entry.installEventFilter(self)
+
     def update_mean_text(self, text):
         self.mean_lab2.setText(text) 
 
     def handle_ans_enter(self, ans):
-        word = self.func.check_answer_enterd(ans)
-        if word:
-            self.update_mean_text(f"Wrong Answer!\nThe answer should be: {word}\n")
-            loop = QEventLoop()
-            QTimer.singleShot(2000, loop.quit)
-            loop.exec_()
-        self.func.dict_list.remove(self.func.random_line)
-        self.func.handle_empty_dict()
-        next_word = self.func.choose_word(self.func.dict_list)
-        if next_word:
-            self.update_mean_text(next_word[1])
-        else:
-            message = QMessageBox()
-            message.setText("Can not read the next word!")
-            message.exec_()
+        # Check answer entered
+        if not self.func.check_answer_enterd(ans):
+            # Check answer correctness
+            word = self.func.check_ans_correct(ans)
+            if word:
+                self.update_mean_text(f"Wrong Answer!\nThe answer should be: {word}\n")
+                loop = QEventLoop()
+                QTimer.singleShot(2000, loop.quit)
+                loop.exec_()
+            # Generating next word
+            # should I cross over the function parameter and directly control the upper layer object?
+            self.ans_entry.clear()
+            self.func.dict_list.remove(self.func.random_line)
+            self.func.handle_empty_dict()
+            next_word = self.func.choose_word(self.func.dict_list)
+            if next_word:
+                self.update_mean_text(next_word[1])
+            else:
+                message = QMessageBox()
+                message.setText("Can not read the next word!")
+                message.exec_()
+
+    def eventFilter(self, obj, event):
+        if obj == self.ans_entry and event.type() == event.KeyPress and event.key() == Qt.Key_Return:
+            self.handle_ans_enter(self.ans_entry.text())
+            return True
+        return super().eventFilter(obj, event)
 
 class FlashCardFunction():
     def __init__(self):
@@ -51,13 +66,11 @@ class FlashCardFunction():
         self.dict_list = []
 
     def check_answer_enterd(self, ans):
-        if ans != "":
-            return self.check_ans_correct(ans)
-        else:
+        if not ans:
             message = QMessageBox()
             message.setText("Please enter an answer!")
             message.exec_()
-            return
+            return True
 
     def read_current_dict(self):
         try:
