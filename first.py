@@ -3,7 +3,6 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from constant import *
 import random
-import sys
 
 class First(QWidget):
     def __init__(self, storage):
@@ -14,10 +13,9 @@ class First(QWidget):
         self.storage = storage
         self.func = FlashCardFunction(self.storage)
         # Open current dictionary
-        # current_word = self.func.read_current_dict()
         current_word = self.func.choose_word(self.storage.current_dict)
         if current_word:
-            self.update_mean_text(current_word[1])
+            self.update_mean_text(current_word)
         else:
             message = QMessageBox()
             message.setText("Can not read the current dictionary!")
@@ -50,11 +48,12 @@ class First(QWidget):
             # should I cross over the function parameter 
             # and directly control the upper layer object?
             self.ans_entry.clear()
-            self.func.dict_list.remove(self.func.random_line)
-            self.func.handle_empty_dict()
-            next_word = self.func.choose_word(self.func.dict_list)
+            self.storage.current_dict.remove(self.func.word)
+            # self.func.handle_empty_dict() #!!!!!!!!!!!!
+            self.storage.handle_empty_dict(self.storage.dict)
+            next_word = self.func.choose_word(self.storage.current_dict)
             if next_word:
-                self.update_mean_text(next_word[1])
+                self.update_mean_text(next_word)
             else:
                 message = QMessageBox()
                 message.setText("Can not read the next word!")
@@ -69,12 +68,11 @@ class First(QWidget):
 
 class FlashCardFunction():
     def __init__(self, storage):
-        # self.wrong_list = []
-        # self.correct_list = []
-        # self.dict_list = []
-        self.dict_list = storage.current_dict
-        self.wrong_list = storage.wrong_answer_list
-        self.correct_list = storage.correct_answer_list
+        self.storage = storage
+        # self.dict = storage.dict
+        # self.dict_list = storage.current_dict
+        # self.wrong_list = storage.wrong_answer_list
+        # self.correct_list = storage.correct_answer_list
 
     def check_answer_enterd(self, ans):
         if not ans:
@@ -83,53 +81,30 @@ class FlashCardFunction():
             message.exec_()
             return True
 
-    def read_current_dict(self):
-        try:
-            with open(current_dict_path, 'r') as file:
-                self.dict_list = file.readlines()
-                return f"{self.choose_word(self.dict_list)[1]}"
-        except FileNotFoundError:
-            print(f"File not found: {current_dict_path}")
-        except Exception as e:
-            print(f"An error occurred: {e}")
-    
     def choose_word(self, dict_list):
-        self.random_line = random.choice(dict_list)
-        text = self.random_line.rstrip('\n')
-        self.current_pair = text.split(':')
-        return self.current_pair
+        self.word = random.choice(dict_list)
+        self.meaning = self.storage.dict[self.word]
+        return self.meaning
 
     def check_ans_correct(self, answer):
         ans = answer.lower()
-        if ans != self.current_pair[0]:
-            pair = self.form_pair(self.current_pair)
-            self.wrong_list.append(pair)
-            return self.current_pair[0]
+        if ans != self.word:
+            self.storage.wrong_answer_list.append(self.word)
+            return self.word
         else:
-            pair = self.form_pair(self.current_pair)
-            self.correct_list.append(pair)
+            self.storage.correct_answer_list.append(self.word)
             return
     
     def form_pair(self, list):
         pair = f"{list[0]}:{list[1]}\n"
         return pair
 
-    def write_to_file(self, path, list):
-        with open(path, 'w') as file:
-            for pair in list:
-                file.writelines(f"{pair}\n")
-    
-    def overwrite_current_dict(self, path, list):
-        with open(path, 'w') as file:
-            for line in list:
-                file.writelines(line)
-
-    def handle_empty_dict(self):
-        if not self.dict_list:
-            if not self.correct_list:
-                message = QMessageBox()
-                message.setText("Well, you got none of them correct!\
-                                \nCan't help you!")
-                message.exec_()
-            self.dict_list = self.correct_list[:]
-            self.correct_list = []
+    # def handle_empty_dict(self):
+    #     if not self.dict_list:
+    #         if not self.correct_list:
+    #             message = QMessageBox()
+    #             message.setText("Well, you got none of them correct!\
+    #                             \nCan't help you!")
+    #             message.exec_()
+    #         self.dict_list = self.correct_list[:]
+    #         self.correct_list = []

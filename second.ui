@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="change_btn">
    <property name="geometry">
     <rect>
-     <x>470</x>
-     <y>320</y>
+     <x>490</x>
+     <y>370</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -30,7 +30,7 @@
     </font>
    </property>
    <property name="text">
-    <string>Flash Card</string>
+    <string>Dictionary</string>
    </property>
   </widget>
   <widget class="QTextEdit" name="meaning_entry">
@@ -56,7 +56,7 @@
    <property name="geometry">
     <rect>
      <x>30</x>
-     <y>320</y>
+     <y>360</y>
      <width>131</width>
      <height>41</height>
     </rect>

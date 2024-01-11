@@ -2,7 +2,9 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from first import First
 from second import Second
+from third import Third
 from constant import *
+import json
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -15,13 +17,19 @@ class MainWindow(QMainWindow):
         self.first.change_btn.clicked.connect(self.go_to_second)
         self.second = Second(self.storage)
         self.stackedWidget.addWidget(self.second)
-        self.second.change_btn.clicked.connect(self.go_to_first)
+        self.second.change_btn.clicked.connect(self.go_to_third)
+        self.third = Third(self.storage)
+        self.stackedWidget.addWidget(self.third)
+        self.third.change_btn.clicked.connect(self.go_to_first)
 
     def go_to_first(self):
         self.stackedWidget.setCurrentIndex(0)
 
     def go_to_second(self):
         self.stackedWidget.setCurrentIndex(1)    
+
+    def go_to_third(self):
+        self.stackedWidget.setCurrentIndex(2)    
     
     def closeEvent(self, event):
         reply = QMessageBox.question(
@@ -29,46 +37,62 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.storage.write_to_file(current_dict_path, self.storage.current_dict)
-            self.storage.write_to_file(wrong_word_path, self.storage.wrong_answer_list)
-            self.storage.write_to_file(correct_word_path, self.storage.correct_answer_list)
-            print(self.storage.current_dict)
-            print(self.storage.wrong_answer_list)
-            print(self.storage.correct_answer_list)
+            self.storage.write_to_file(config["current_dict_path"], self.storage.current_dict)
+            self.storage.write_to_file(config["wrong_word_path"], self.storage.wrong_answer_list)
+            self.storage.write_to_file(config["correct_word_path"], self.storage.correct_answer_list)
             event.accept()
         else:
             event.ignore()
 
-    
-        
 class Storage():
     # Create current_dict, correct_word, wrong_word here
     def __init__(self) -> None:
+        self.dict ={}
         self.current_dict = []
         self.wrong_answer_list = []
         self.correct_answer_list = []
+        self.dict = self.read_json_file(config["dict_path"])
         self.current_dict = self.read_file(
-            current_dict_path, self.current_dict)
+            config["current_dict_path"])
         self.wrong_answer_list = self.read_file(
-            wrong_word_path, self.wrong_answer_list)
+            config["wrong_word_path"])
         self.correct_answer_list = self.read_file(
-            correct_word_path, self.correct_answer_list)
+            config["correct_word_path"])
+        if not self.current_dict:
+            self.handle_empty_dict(self.dict)
 
+    def read_json_file(self, path):
+        with open(path, "r") as json_file:
+            dictionary = json.load(json_file)
+        return dictionary
 
-    def read_file(self, file_path, pointer):
+    def read_file(self, file_path):
         try:
             with open(file_path, 'r') as file:
-                pointer = file.readlines()
+                word_list = [line.strip() for line in file]
         except FileNotFoundError:
-            print(f"File not found: {current_dict_path}")
+            path = config["current_dict_path"]
+            print(f"File not found: {path}")
         except Exception as e:
             print(f"An error occurred: {e}")
-        return pointer
+        return word_list
 
     def write_to_file(self, path, list):
         with open(path, 'w') as file:
             for line in list:
-                file.writelines(line)
+                file.write(line + '\n')
+
+    def handle_empty_dict(self, dict):
+        new_dict = []
+        if not self.current_dict:
+            if not self.correct_answer_list and not self.wrong_answer_list:
+                self.current_dict = list(dict.keys())
+            elif not self.correct_answer_list and self.wrong_answer_list:
+                print("reach here")
+                self.current_dict = self.wrong_answer_list[:]
+                self.wrong_answer_list = []
+        
+
 
 if __name__ == '__main__':
     app = QApplication([])
