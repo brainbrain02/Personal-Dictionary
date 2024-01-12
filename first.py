@@ -49,7 +49,6 @@ class First(QWidget):
             # and directly control the upper layer object?
             self.ans_entry.clear()
             self.storage.current_dict.remove(self.func.word)
-            # self.func.handle_empty_dict() #!!!!!!!!!!!!
             self.storage.handle_empty_dict(self.storage.dict)
             next_word = self.func.choose_word(self.storage.current_dict)
             if next_word:
@@ -69,10 +68,6 @@ class First(QWidget):
 class FlashCardFunction():
     def __init__(self, storage):
         self.storage = storage
-        # self.dict = storage.dict
-        # self.dict_list = storage.current_dict
-        # self.wrong_list = storage.wrong_answer_list
-        # self.correct_list = storage.correct_answer_list
 
     def check_answer_enterd(self, ans):
         if not ans:
@@ -98,13 +93,3 @@ class FlashCardFunction():
     def form_pair(self, list):
         pair = f"{list[0]}:{list[1]}\n"
         return pair
-
-    # def handle_empty_dict(self):
-    #     if not self.dict_list:
-    #         if not self.correct_list:
-    #             message = QMessageBox()
-    #             message.setText("Well, you got none of them correct!\
-    #                             \nCan't help you!")
-    #             message.exec_()
-    #         self.dict_list = self.correct_list[:]
-    #         self.correct_list = []

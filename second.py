@@ -17,14 +17,13 @@ class Second(QWidget):
     def handle_entry_enter(self, word, meaning):
         if not self.func.check_data_enterd(word, meaning):
             self.func.append_dict_list(word, meaning)
+            self.func.append_state_list(word)
             self.word_entry.clear()
             self.meaning_entry.clear()
 
 class DictEditFunction():
     def __init__(self, storage):
-        self.dict_list = storage.current_dict
-        self.wrong_answer_list = storage.wrong_answer_list
-        self.correct_answer_list = storage.correct_answer_list
+        self.storage = storage
 
     def check_data_enterd(self, word, mean):
         if not word:
@@ -37,6 +36,20 @@ class DictEditFunction():
             message.setText("Please enter the meaning of the word")
             message.exec_()
             return True
+        if self.check_word_appear(word):
+            message = QMessageBox()
+            message.setText("This word already existed in the dictionary")
+            message.exec_()
+            return True
     
     def append_dict_list(self, word, meaning):
-        self.dict_list.append(f"{word}:{meaning}\n")
+        self.storage.dict[word] = meaning
+        self.storage.current_dict.append(word)
+
+    def check_word_appear(self, word):
+        if word in self.storage.dict:
+            return True
+        return
+
+    def append_state_list(self, word):
+        self.storage.state[word] = True

@@ -37,6 +37,8 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
+            self.storage.write_json_file(config["dict_path"], self.storage.dict)
+            self.storage.write_json_file(config["test_state_path"], self.storage.state)
             self.storage.write_to_file(config["current_dict_path"], self.storage.current_dict)
             self.storage.write_to_file(config["wrong_word_path"], self.storage.wrong_answer_list)
             self.storage.write_to_file(config["correct_word_path"], self.storage.correct_answer_list)
@@ -48,6 +50,7 @@ class Storage():
     # Create current_dict, correct_word, wrong_word here
     def __init__(self) -> None:
         self.dict ={}
+        self.state = {}
         self.current_dict = []
         self.wrong_answer_list = []
         self.correct_answer_list = []
@@ -58,6 +61,7 @@ class Storage():
             config["wrong_word_path"])
         self.correct_answer_list = self.read_file(
             config["correct_word_path"])
+        self.state = self.read_json_file(config["test_state_path"])
         if not self.current_dict:
             self.handle_empty_dict(self.dict)
 
@@ -65,6 +69,10 @@ class Storage():
         with open(path, "r") as json_file:
             dictionary = json.load(json_file)
         return dictionary
+
+    def write_json_file(self, path, dict):
+        with open(path, "w") as json_file:
+            json.dump(dict, json_file, indent=2)
 
     def read_file(self, file_path):
         try:
@@ -87,12 +95,15 @@ class Storage():
         if not self.current_dict:
             if not self.correct_answer_list and not self.wrong_answer_list:
                 self.current_dict = list(dict.keys())
+                self.handle_word_state(self.current_dict, self.state)
             elif not self.correct_answer_list and self.wrong_answer_list:
-                print("reach here")
                 self.current_dict = self.wrong_answer_list[:]
                 self.wrong_answer_list = []
-        
 
+    def handle_word_state(self, dict, state):
+        for key in state:
+            if not state[key]:
+                dict.remove(key)
 
 if __name__ == '__main__':
     app = QApplication([])
