@@ -23,12 +23,22 @@ class MainWindow(QMainWindow):
         self.third.change_btn.clicked.connect(self.go_to_first)
 
     def go_to_first(self):
+        self.first.ans_entry.clear()
+        current_word = self.first.func.choose_word(self.storage.current_dict)
+        if current_word:
+            self.first.update_mean_text(current_word)
+        else:
+            message = QMessageBox()
+            message.setText("Can not read the current dictionary!")
+            message.exec_()
         self.stackedWidget.setCurrentIndex(0)
 
     def go_to_second(self):
         self.stackedWidget.setCurrentIndex(1)    
 
     def go_to_third(self):
+        self.third.display.clear()
+        self.third.populate_tree(self.third.display, self.storage.dict, self.storage.state)
         self.stackedWidget.setCurrentIndex(2)    
     
     def closeEvent(self, event):

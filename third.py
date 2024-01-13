@@ -40,7 +40,6 @@ class Third(QWidget):
         item = self.display.itemAt(sender_checkbox.pos())
         if item is not None:
             # Use assignment, not equality check
-            print(self.storage.current_dict)
             if not state and len(self.storage.current_dict) == 1:
                 message = QMessageBox()
                 message.setText("The testing flash card database must have at least 1 word!")
@@ -49,7 +48,7 @@ class Third(QWidget):
                 sender_checkbox.setChecked(True)
                 return
             # Update the state regardless of the condition
-            self.storage.state[key] = state == Qt.Checked
+            self.storage.state[key] = state
             # Update the current_dict based on the state
             if state and key not in self.storage.current_dict:
                 self.storage.current_dict.append(key)
@@ -61,25 +60,18 @@ class Third(QWidget):
         if column == 1:
             # Get the text from the second column
             value_text = item.text(1)
-
-            # Create a QLabel with the value text
-            label = QLabel(value_text)
-
-            # Create a QScrollArea to allow scrolling if content is too long
-            scroll_area = QScrollArea(self)
-            scroll_area.setWidgetResizable(True)
-            scroll_area.setWidget(label)
-
-            # Set a fixed size for the pop-up window
-            scroll_area.setMinimumSize(400, 300)
-
-            # Create a QMessageBox to display the scroll area
-            popup = QMessageBox(self)
-            popup.setWindowTitle('Value')
-            popup.layout().addWidget(scroll_area)
-
-            # Show the popup
-            popup.exec_()
+            # Create a window
+            popup_dialog = QDialog()
+            text_edit = QTextEdit(value_text)
+            font = text_edit.font()
+            font.setPointSize(14)
+            text_edit.setFont(font)
+            text_edit.setFixedSize(500, 300)
+            layout = QVBoxLayout(popup_dialog)
+            layout.addWidget(text_edit)
+            popup_dialog.setLayout(layout)
+            popup_dialog.exec_()
+            
 
 class DictionaryFunction():
     def __init__(self, storage):
