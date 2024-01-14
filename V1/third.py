@@ -7,15 +7,15 @@ class Third(QWidget):
     def __init__(self, storage):
         super().__init__()
         uic.loadUi('third.ui', self)
-        self.display.setColumnWidth(0, 200)
-        self.display.setColumnWidth(1, 500)
+        self.display.setColumnWidth(0, 150)
+        self.display.setColumnWidth(1, 410)
         self.display.setColumnWidth(2, 59)
         
         ### Main function setup
         self.storage = storage
+        self.func = DictionaryFunction(self.storage)
 
-        # self.populate_tree(self.display, self.storage.dict, self.storage.state)
-        self.populate_tree(self.display, self.storage.dictionary)
+        self.populate_tree(self.display, self.storage.dict, self.storage.state)
         self.display.itemClicked.connect(self.display_popup)
         
     def add_tree_item(self, parent_text, item_data):
@@ -24,17 +24,16 @@ class Third(QWidget):
             child_item = QTreeWidgetItem(parent_item, item_data)
             return child_item
     
-    def populate_tree(self, tree_widget, data):
-        for word, attributes in data.items():
-            row = QTreeWidgetItem(tree_widget)
-            row.setText(0, word)
-            row.setText(1, attributes.get("definition"))
+    def populate_tree(self, tree_widget, data, state):
+        for key, value in data.items():
+            item = QTreeWidgetItem(tree_widget)
+            item.setText(0, str(key))
+            item.setText(1, str(value))
             checkbox = QCheckBox()
-            tree_widget.setItemWidget(row, 2, checkbox)
-            if attributes.get("state"):
+            tree_widget.setItemWidget(item, 2, checkbox)
+            if state[key]:
                 checkbox.setChecked(True)
-            checkbox.clicked.connect(lambda state, key=word: self.checkbox_state_changed(state, key))
-
+            checkbox.clicked.connect(lambda state, key=key: self.checkbox_state_changed(state, key))
 
     def checkbox_state_changed(self, state, key):
         sender_checkbox = self.sender()
@@ -49,7 +48,7 @@ class Third(QWidget):
                 sender_checkbox.setChecked(True)
                 return
             # Update the state regardless of the condition
-            self.storage.dictionary[key]["state"] = state
+            self.storage.state[key] = state
             # Update the current_dict based on the state
             if state and key not in self.storage.current_dict:
                 self.storage.current_dict.append(key)
@@ -60,7 +59,7 @@ class Third(QWidget):
         # Check if the clicked column is the second column (index 1)
         if column == 1:
             # Get the text from the second column
-            value_text = self.storage.dictionary[item.text(0)].get("definition")
+            value_text = item.text(1)
             # Create a window
             popup_dialog = QDialog()
             text_edit = QTextEdit(value_text)
@@ -73,3 +72,10 @@ class Third(QWidget):
             popup_dialog.setLayout(layout)
             popup_dialog.exec_()
             
+
+class DictionaryFunction():
+    def __init__(self, storage):
+        self.storage = storage
+
+    
+    

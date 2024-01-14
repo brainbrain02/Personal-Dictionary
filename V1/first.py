@@ -15,7 +15,7 @@ class First(QWidget):
         # Open current dictionary
         current_word = self.func.choose_word(self.storage.current_dict)
         if current_word:
-            self.update_word_information(current_word)
+            self.update_mean_text(current_word)
         else:
             message = QMessageBox()
             message.setText("Can not read the current dictionary!")
@@ -29,13 +29,8 @@ class First(QWidget):
         # Install an event filter to capture key events
         self.ans_entry.installEventFilter(self)
 
-    def update_word_information(self, list):
-        self.mean_lab2.setText(list[0])
-        self.common_lab2.setText(list[1])
-        self.usage_lab2.setText(list[2])
-        self.synonym_lab2.setText(list[3][0])
-        self.synonym_lab3.setText(list[3][1])
-        self.synonym_lab4.setText(list[3][2])
+    def update_mean_text(self, text):
+        self.mean_lab2.setText(text) 
 
     def handle_ans_enter(self, ans):
         # Check answer entered
@@ -43,18 +38,21 @@ class First(QWidget):
             # Check answer correctness
             word = self.func.check_ans_correct(ans)
             if word:
-                self.func.show_message_box(
+                self.update_mean_text(
                     f"Wrong Answer!\nThe answer should be: {word}\n"
                     )
-                # loop = QEventLoop()
-                # QTimer.singleShot(2000, loop.quit)
-                # loop.exec_()
+                loop = QEventLoop()
+                QTimer.singleShot(2000, loop.quit)
+                loop.exec_()
+            # Generating next word
+            # should I cross over the function parameter 
+            # and directly control the upper layer object?
             self.ans_entry.clear()
             self.storage.current_dict.remove(self.func.word)
-            self.storage.handle_empty_dict(self.storage.dictionary)
+            self.storage.handle_empty_dict(self.storage.dict)
             next_word = self.func.choose_word(self.storage.current_dict)
             if next_word:
-                self.update_word_information(next_word)
+                self.update_mean_text(next_word)
             else:
                 message = QMessageBox()
                 message.setText("Can not read the next word!")
@@ -80,13 +78,8 @@ class FlashCardFunction():
 
     def choose_word(self, dict_list):
         self.word = random.choice(dict_list)
-        self.meaning = self.storage.dictionary[self.word].get("definition")
-        return [
-            self.storage.dictionary[self.word].get("definition"),
-            self.storage.dictionary[self.word].get("common"),
-            self.storage.dictionary[self.word].get("usage"),
-            self.storage.dictionary[self.word].get("synonyms")
-        ]
+        self.meaning = self.storage.dict[self.word]
+        return self.meaning
 
     def check_ans_correct(self, answer):
         ans = answer.lower()
@@ -100,10 +93,3 @@ class FlashCardFunction():
     def form_pair(self, list):
         pair = f"{list[0]}:{list[1]}\n"
         return pair
-    
-    def show_message_box(self, msg):
-        message_box = QMessageBox()
-        message_box.setText(msg)
-        message_box.exec_()
-        # Close the message box after 2 seconds
-        QTimer.singleShot(2000, lambda: message_box.done(QMessageBox.Ok))

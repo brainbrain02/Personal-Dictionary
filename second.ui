@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>639</width>
-    <height>421</height>
+    <width>783</width>
+    <height>492</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="change_btn">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>370</y>
+     <x>640</x>
+     <y>440</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -33,13 +33,13 @@
     <string>Dictionary</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="meaning_entry">
+  <widget class="QTextEdit" name="definition_entry">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>120</y>
-     <width>581</width>
-     <height>171</height>
+     <x>10</x>
+     <y>80</y>
+     <width>611</width>
+     <height>141</height>
     </rect>
    </property>
    <property name="font">
@@ -49,14 +49,14 @@
     </font>
    </property>
    <property name="placeholderText">
-    <string>Please enter the meaning of the word here</string>
+    <string>Please enter the definition of the word here*</string>
    </property>
   </widget>
   <widget class="QPushButton" name="enter_btn">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>360</y>
+     <x>640</x>
+     <y>250</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -75,9 +75,9 @@
   <widget class="QLineEdit" name="word_entry">
    <property name="geometry">
     <rect>
-     <x>30</x>
-     <y>40</y>
-     <width>561</width>
+     <x>10</x>
+     <y>20</y>
+     <width>611</width>
      <height>51</height>
     </rect>
    </property>
@@ -90,8 +90,128 @@
     </font>
    </property>
    <property name="placeholderText">
-    <string>Please enter the word here</string>
+    <string>Please enter the word here*</string>
    </property>
+  </widget>
+  <widget class="QTextEdit" name="usage_entry">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>230</y>
+     <width>611</width>
+     <height>91</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the usage of the word here</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="example_entry">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>330</y>
+     <width>611</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter an example sentence here</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="chinese_entry">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>410</y>
+     <width>281</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the chinese translation here</string>
+   </property>
+  </widget>
+  <widget class="QTextEdit" name="common_entry">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>410</y>
+     <width>311</width>
+     <height>71</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the common usage here</string>
+   </property>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>640</x>
+     <y>20</y>
+     <width>131</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QTextEdit" name="synonym_entry1">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="placeholderText">
+       <string>Synonym 1</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="synonym_entry2">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="placeholderText">
+       <string>Synonym 2</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="synonym_entry3">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+       </font>
+      </property>
+      <property name="placeholderText">
+       <string>Synonym 3</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
  </widget>
  <resources/>

@@ -1,0 +1,44 @@
+Simple GUI
+
+Page 1
+	1.Showing the meaning of the word in "Current Dictionary.txt"
+	2.User has to type the word into a entry box or click a "IDK" button
+	3.If user spell the target word correctly:
+		#Put that word into "Correct word.txt"
+		#Move to the next word
+	4.If user click "IDK" button or spell it wrong:
+		#Show the correct answer
+		#Put the word into "Wrong word.txt"
+		#Move to the next word
+		#Ask the word again after changable number of word
+		#Repeat step 1
+	5.If the "Current Dictionary.txt" is empty:
+		#Transfer all the words in "Correct word.txt" to "Current Dictionary.txt"
+
+Page 2
+	1. 1 word entry window & 1 meaning entry window & 1 enter button
+	2. User only allowed to click enter button after both entry windwos are filled
+	3. Add word and its meaning to "Current Word.txt" with correct syntax
+
+Page 3
+	1. 1 display window to show a word and its meaning and the state where it will appear in the flash card data base
+	2. When the user click on the meaning column, show a pop up window with
+		a. the full meaing of the word
+		b. the synoyms if it has
+
+how to ask ChatGPT for word information:
+definition
+answer the question: is this word common to use
+common usage
+an example
+the Cantonese translation
+common synonyms of the word
+in the following chat, I will provide a word and I want you to give me the above information of the word.
+
+
+
+Just Done:
+Fixed "Can't save words' state correctly to file"
+Fixed "data inconsistent after change is made in dictionay page and move to flash card page"
+Fixed "data inconsistent after new word is added in adding word page and move to dictionary page"
+

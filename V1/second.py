@@ -12,26 +12,14 @@ class Second(QWidget):
         self.storage = storage
         self.func = DictEditFunction(self.storage)
         # Check answer box is empty
-        self.enter_btn.clicked.connect(lambda: self.handle_entry_enter(
-            self.word_entry.text(), self.definition_entry.toPlainText()))
+        self.enter_btn.clicked.connect(lambda: self.handle_entry_enter(self.word_entry.text(), self.meaning_entry.toPlainText()))
     
     def handle_entry_enter(self, word, meaning):
         if not self.func.check_data_enterd(word, meaning):
             self.func.append_dict_list(word, meaning)
-            self.func.add_new_word(self.word_entry.text(), self.definition_entry.toPlainText(), self.common_entry.toPlainText(),
-                                   self.usage_entry.toPlainText(), self.example_entry.toPlainText(), self.chinese_entry.toPlainText(),
-                                   [self.synonym_entry1.toPlainText(), self.synonym_entry2.toPlainText(), self.synonym_entry3.toPlainText()]
-                                   )
+            self.func.append_state_list(word)
             self.word_entry.clear()
-            self.definition_entry.clear()
-            self.common_entry.clear()
-            self.usage_entry.clear()
-            self.example_entry.clear()
-            self.chinese_entry.clear()
-            self.synonym_entry1.clear()
-            self.synonym_entry2.clear()
-            self.synonym_entry3.clear()
-            print(self.storage.dictionary)
+            self.meaning_entry.clear()
 
 class DictEditFunction():
     def __init__(self, storage):
@@ -55,22 +43,13 @@ class DictEditFunction():
             return True
     
     def append_dict_list(self, word, meaning):
+        self.storage.dict[word] = meaning
         self.storage.current_dict.append(word)
 
     def check_word_appear(self, word):
-        word = word.title()
-        if word in self.storage.dictionary:
+        if word in self.storage.dict:
             return True
         return
 
-    def add_new_word(self, word, defin, common, usage, example, chinese, syn):
-        temp_dict = {
-           "definition" : defin,
-            "common" : common,
-            "usage" : usage,
-            "example" :  example,
-            "chinese" : chinese,
-            "synonyms" : syn,
-            "state": 1
-        }
-        self.storage.dictionary[word] = temp_dict
+    def append_state_list(self, word):
+        self.storage.state[word] = True

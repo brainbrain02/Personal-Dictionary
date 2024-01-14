@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>892</width>
-    <height>521</height>
+    <width>785</width>
+    <height>491</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,8 +16,8 @@
   <widget class="QPushButton" name="change_btn">
    <property name="geometry">
     <rect>
-     <x>490</x>
-     <y>370</y>
+     <x>640</x>
+     <y>440</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -33,71 +33,12 @@
     <string>Edit Dictionary</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="mean_lab2">
-   <property name="geometry">
-    <rect>
-     <x>30</x>
-     <y>50</y>
-     <width>581</width>
-     <height>221</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <family>Sitka Banner</family>
-     <pointsize>14</pointsize>
-     <italic>true</italic>
-    </font>
-   </property>
-   <property name="readOnly">
-    <bool>true</bool>
-   </property>
-  </widget>
-  <widget class="QLabel" name="mean_lab1">
-   <property name="geometry">
-    <rect>
-     <x>270</x>
-     <y>10</y>
-     <width>90</width>
-     <height>40</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>16</pointsize>
-    </font>
-   </property>
-   <property name="layoutDirection">
-    <enum>Qt::LeftToRight</enum>
-   </property>
-   <property name="frameShadow">
-    <enum>QFrame::Plain</enum>
-   </property>
-   <property name="text">
-    <string>Meaning</string>
-   </property>
-   <property name="textFormat">
-    <enum>Qt::RichText</enum>
-   </property>
-   <property name="alignment">
-    <set>Qt::AlignCenter</set>
-   </property>
-   <property name="wordWrap">
-    <bool>false</bool>
-   </property>
-   <property name="margin">
-    <number>3</number>
-   </property>
-   <property name="indent">
-    <number>-1</number>
-   </property>
-  </widget>
   <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
-     <x>60</x>
-     <y>280</y>
-     <width>521</width>
+     <x>10</x>
+     <y>430</y>
+     <width>541</width>
      <height>61</height>
     </rect>
    </property>
@@ -108,6 +49,9 @@
        <font>
         <pointsize>16</pointsize>
        </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::WheelFocus</enum>
       </property>
       <property name="layoutDirection">
        <enum>Qt::RightToLeft</enum>
@@ -154,6 +98,231 @@
       </property>
       <property name="checkable">
        <bool>false</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>541</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="mean_lab1">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="frameShadow">
+       <enum>QFrame::Plain</enum>
+      </property>
+      <property name="text">
+       <string>Definition</string>
+      </property>
+      <property name="textFormat">
+       <enum>Qt::RichText</enum>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="wordWrap">
+       <bool>false</bool>
+      </property>
+      <property name="margin">
+       <number>3</number>
+      </property>
+      <property name="indent">
+       <number>-1</number>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="mean_lab2">
+      <property name="font">
+       <font>
+        <family>MS Shell Dlg 2</family>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+      <property name="readOnly">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>240</y>
+     <width>541</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QLabel" name="usage_lab1">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Usage</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="usage_lab2">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>10</y>
+     <width>211</width>
+     <height>221</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_4">
+    <item>
+     <widget class="QLabel" name="commmon_lab1">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Common Usage</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QTextEdit" name="common_lab2">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="focusPolicy">
+       <enum>Qt::NoFocus</enum>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="layoutWidget">
+   <property name="geometry">
+    <rect>
+     <x>560</x>
+     <y>240</y>
+     <width>211</width>
+     <height>181</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_5">
+    <item>
+     <widget class="QLabel" name="synonym_lab1">
+      <property name="font">
+       <font>
+        <pointsize>16</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Synonyms</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="synonym_lab2">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="synonym_lab3">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="synonym_lab4">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <italic>false</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>TextLabel</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
       </property>
      </widget>
     </item>
