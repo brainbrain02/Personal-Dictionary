@@ -33,7 +33,8 @@ class Third(QWidget):
             tree_widget.setItemWidget(row, 2, checkbox)
             if attributes.get("state"):
                 checkbox.setChecked(True)
-            checkbox.clicked.connect(lambda state, key=word: self.checkbox_state_changed(state, key))
+            checkbox.clicked.connect(lambda state, key=word: 
+                                     self.checkbox_state_changed(state, key))
 
 
     def checkbox_state_changed(self, state, key):
@@ -60,16 +61,33 @@ class Third(QWidget):
         # Check if the clicked column is the second column (index 1)
         if column == 1:
             # Get the text from the second column
-            value_text = self.storage.dictionary[item.text(0)].get("definition")
+            value_list = []
+            synonyms_list = []
+            word_dict = self.storage.dictionary[item.text(0)]
+
+            for key, value in word_dict.items():
+                synonyms_list = []
+                if value and key != "state" and key != "add time" and key != "test time":  # change this line when adding the timestamp feature
+                    if key == "synonyms":
+                        for synonym in value:
+                            synonyms_list.append(synonym)
+                        synonyms = "<br>".join(synonyms_list)
+                        value_list.append(f"<b>{key.title()}:</b><br>{synonyms}<br>")
+                    else:
+                        value_list.append(f"<b>{key.title()}:</b><br>{value}<br><br>")
+
+            value_text = "".join(value_list)
+
             # Create a window
             popup_dialog = QDialog()
-            text_edit = QTextEdit(value_text)
+            text_edit = QTextEdit()
+            text_edit.setHtml(value_text)
             font = text_edit.font()
-            font.setPointSize(14)
+            font.setPointSize(13)
             text_edit.setFont(font)
-            text_edit.setFixedSize(500, 300)
+            text_edit.setFixedSize(550, 600)
             layout = QVBoxLayout(popup_dialog)
             layout.addWidget(text_edit)
             popup_dialog.setLayout(layout)
+            text_edit.mousePressEvent = lambda event: popup_dialog.reject()
             popup_dialog.exec_()
-            

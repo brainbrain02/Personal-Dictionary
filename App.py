@@ -108,8 +108,6 @@ class Storage():
 
     def handle_word_state(self, current_dict, dict):
         for word, att in dict.items():
-            print(word)
-            print(att)
             if not att["state"]:
                 current_dict.remove(word)
 

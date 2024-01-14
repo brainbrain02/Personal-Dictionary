@@ -2,6 +2,7 @@ from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from constant import *
+import time
 
 class Second(QWidget):
     def __init__(self, storage):
@@ -31,7 +32,6 @@ class Second(QWidget):
             self.synonym_entry1.clear()
             self.synonym_entry2.clear()
             self.synonym_entry3.clear()
-            print(self.storage.dictionary)
 
 class DictEditFunction():
     def __init__(self, storage):
@@ -65,12 +65,14 @@ class DictEditFunction():
 
     def add_new_word(self, word, defin, common, usage, example, chinese, syn):
         temp_dict = {
-           "definition" : defin,
+            "definition" : defin,
             "common" : common,
             "usage" : usage,
             "example" :  example,
             "chinese" : chinese,
             "synonyms" : syn,
-            "state": 1
+            "state" : 1,
+            "add time" : time.strftime("%Y-%m-%d", time.localtime(time.time())),
+            "test time" : time.strftime("%Y-%m-%d", time.localtime(time.time()))
         }
         self.storage.dictionary[word] = temp_dict
