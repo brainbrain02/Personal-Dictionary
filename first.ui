@@ -261,9 +261,9 @@
   <widget class="QWidget" name="">
    <property name="geometry">
     <rect>
-     <x>11</x>
-     <y>427</y>
-     <width>621</width>
+     <x>10</x>
+     <y>420</y>
+     <width>541</width>
      <height>71</height>
     </rect>
    </property>
@@ -314,29 +314,6 @@
       </property>
       <property name="text">
        <string>IDK</string>
-      </property>
-      <property name="iconSize">
-       <size>
-        <width>25</width>
-        <height>25</height>
-       </size>
-      </property>
-      <property name="checkable">
-       <bool>false</bool>
-      </property>
-     </widget>
-    </item>
-    <item>
-     <widget class="QPushButton" name="replay_btn">
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-        <weight>50</weight>
-        <bold>false</bold>
-       </font>
-      </property>
-      <property name="text">
-       <string>Replay</string>
       </property>
       <property name="iconSize">
        <size>

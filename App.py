@@ -3,10 +3,8 @@ from PyQt5.QtWidgets import *
 from first import First
 from second import Second
 from third import Third
-from constant import *
 import json
 from playsound import playsound
-import threading
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -49,10 +47,11 @@ class MainWindow(QMainWindow):
             QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
 
         if reply == QMessageBox.Yes:
-            self.storage.write_json_file(config["dict_path"], self.storage.dictionary)
-            self.storage.write_to_file(config["current_dict_path"], self.storage.current_dict)
-            self.storage.write_to_file(config["wrong_word_path"], self.storage.wrong_answer_list)
-            self.storage.write_to_file(config["correct_word_path"], self.storage.correct_answer_list)
+            self.storage.write_json_file("config.json", self.storage.config)
+            self.storage.write_json_file(self.storage.config["dict_path"], self.storage.dictionary)
+            self.storage.write_to_file(self.storage.config["current_dict_path"], self.storage.current_dict)
+            self.storage.write_json_file(self.storage.config["wrong_word_path"], self.storage.wrong_answer_list)
+            self.storage.write_to_file(self.storage.config["correct_word_path"], self.storage.correct_answer_list)
             event.accept()
         else:
             event.ignore()
@@ -64,13 +63,14 @@ class Storage():
         self.current_dict = []
         self.wrong_answer_list = []
         self.correct_answer_list = []
-        self.dictionary = self.read_json_file(config["dict_path"])
+        self.config = self.read_json_file("config.json")
+        self.dictionary = self.read_json_file(self.config["dict_path"])
         self.current_dict = self.read_file(
-            config["current_dict_path"])
-        self.wrong_answer_list = self.read_file(
-            config["wrong_word_path"])
+            self.config["current_dict_path"])
+        self.wrong_answer_list = self.read_json_file(
+            self.config["wrong_word_path"])
         self.correct_answer_list = self.read_file(
-            config["correct_word_path"])
+            self.config["correct_word_path"])
         if not self.current_dict:
             self.handle_empty_dict(self.dictionary)
 
@@ -88,7 +88,7 @@ class Storage():
             with open(file_path, 'r') as file:
                 word_list = [line.strip() for line in file]
         except FileNotFoundError:
-            path = config["current_dict_path"]
+            path = self.config["current_dict_path"]
             print(f"File not found: {path}")
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -105,8 +105,15 @@ class Storage():
                 self.current_dict = list(dict.keys())
                 self.handle_word_state(self.current_dict, self.dictionary)
             elif not self.correct_answer_list and self.wrong_answer_list:
-                self.current_dict = self.wrong_answer_list[:]
-                self.wrong_answer_list = []
+                for pair in self.wrong_answer_list:
+                    self.current_dict.append(pair[0])
+                    self.wrong_answer_list = []
+            elif self.correct_answer_list and not self.wrong_answer_list:
+                self.current_dict = self.correct_answer_list[:]
+                self.correct_answer_list = []
+            elif self.correct_answer_list and self.wrong_answer_list:
+                self.current_dict = self.correct_answer_list[:]
+                self.correct_answer_list = []
 
     def handle_word_state(self, current_dict, dict):
         for word, att in dict.items():

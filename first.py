@@ -1,7 +1,6 @@
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
-from constant import *
 import random
 
 class First(QWidget):
@@ -25,9 +24,9 @@ class First(QWidget):
         self.enter_btn.clicked.connect(
             lambda: self.handle_ans_enter(self.ans_entry.text())
             )
-        self.replay_btn.clicked.connect(lambda: self.storage.play_sound(
-                self.storage.dictionary[self.func.word]["pronunciation"]
-            ))
+        self.idk_btn.clicked.connect(
+            lambda: self.handle_ans_enter("idk")
+            )
 
         # Install an event filter to capture key events
         self.ans_entry.installEventFilter(self)
@@ -40,10 +39,9 @@ class First(QWidget):
         self.synonym_lab2.setText(list[3][0])
         self.synonym_lab3.setText(list[3][1])
         self.synonym_lab4.setText(list[3][2])
-        loop = QEventLoop()
-        QTimer.singleShot(500, loop.quit)
-        loop.exec_()
-        self.storage.play_sound(list[4])
+        # loop = QEventLoop()
+        # QTimer.singleShot(500, loop.quit)
+        # loop.exec_()
 
     def handle_ans_enter(self, ans):
         # Check answer entered
@@ -58,7 +56,9 @@ class First(QWidget):
             self.ans_entry.clear()
             self.storage.current_dict.remove(self.func.word)
             self.storage.handle_empty_dict(self.storage.dictionary)
-            self.next_word = self.func.choose_word(self.storage.current_dict)
+            self.next_word = self.func.handle_wrong_word_lsit()
+            if not self.next_word:
+                self.next_word = self.func.choose_word(self.storage.current_dict)
             if self.next_word:
                 self.update_word_information(self.next_word)
             else:
@@ -86,7 +86,7 @@ class FlashCardFunction():
 
     def choose_word(self, dict_list):
         self.word = random.choice(dict_list)
-        self.meaning = self.storage.dictionary[self.word].get("definition")
+        # self.meaning = self.storage.dictionary[self.word].get("definition")
         return [
             self.storage.dictionary[self.word].get("definition"),
             self.storage.dictionary[self.word].get("common"),
@@ -96,9 +96,9 @@ class FlashCardFunction():
         ]
 
     def check_ans_correct(self, answer):
-        ans = answer.lower()
+        ans = answer.title()
         if ans != self.word:
-            self.storage.wrong_answer_list.append(self.word)
+            self.storage.wrong_answer_list.append([self.word, self.storage.config["word_repetition"]])
             return self.word
         else:
             self.storage.correct_answer_list.append(self.word)
@@ -114,3 +114,24 @@ class FlashCardFunction():
         message_box.exec_()
         # Close the message box after 2 seconds
         QTimer.singleShot(2000, lambda: message_box.done(QMessageBox.Ok))
+
+    def handle_wrong_word_lsit(self):
+        self.word = ""
+        index = 0
+        while index < len(self.storage.wrong_answer_list):
+            pair = self.storage.wrong_answer_list[index]
+            if pair[1] <= 0:
+                self.word = pair[0]
+                self.storage.current_dict.append(self.word)
+                self.storage.wrong_answer_list.pop(index)
+            else:
+                pair[1] -= 1
+                index += 1
+        if self.word:
+            return [
+                self.storage.dictionary[self.word].get("definition"),
+                self.storage.dictionary[self.word].get("common"),
+                self.storage.dictionary[self.word].get("usage"),
+                self.storage.dictionary[self.word].get("synonyms"),
+                self.storage.dictionary[self.word].get("pronunciation")
+            ]

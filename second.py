@@ -1,7 +1,6 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from constant import *
 import time
 from gtts import gTTS
 

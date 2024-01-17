@@ -1,7 +1,6 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
-from constant import *
 
 class Third(QWidget):
     def __init__(self, storage):
@@ -17,6 +16,7 @@ class Third(QWidget):
         # self.populate_tree(self.display, self.storage.dict, self.storage.state)
         self.populate_tree(self.display, self.storage.dictionary)
         self.display.itemClicked.connect(self.display_popup)
+        self.config_btn.clicked.connect(self.ask_new_repetition)
         
     def add_tree_item(self, parent_text, item_data):
         parent_item = self.find_tree_item(parent_text)
@@ -58,48 +58,21 @@ class Third(QWidget):
                 self.storage.current_dict.remove(key)
 
     def display_popup(self, item, column):
-        # # Check if the clicked column is the second column (index 1)
-        # if column == 1:
-        #     # Get the text from the second column
-        #     word_dict = self.storage.dictionary[item.text(0)]
-        #     value_list = [f"<b style='font-size: '36px';'>{item.text(0).title()}<b><br><br>"]
-        #     synonyms_list = []
-
-        #     for key, value in word_dict.items():
-        #         synonyms_list = []
-        #         if value and key != "state" and key != "add time" and key != "test time" and key != "pronunciation":  # change this line when adding the timestamp feature
-        #             if key == "synonyms":
-        #                 for synonym in value:
-        #                     synonyms_list.append(synonym)
-        #                 synonyms = "<br>".join(synonyms_list)
-        #                 value_list.append(f"<b>{key.title()}:</b><br>{synonyms}<br><br>")
-        #             elif key == "common":
-        #                 common = self.storage.convert_readable_common(value)
-        #                 value_list.append(f"<b>{key.title()}:</b><br>{common}<br><br>")
-
-        #             else:
-        #                 value_list.append(f"<b>{key.title()}:</b><br>{value}<br><br>")
-
-        #     value_text = "".join(value_list)
-
-        #     # Create a window
-        #     popup_dialog = QDialog()
-        #     button = QPushButton("Pronunciation of word")
-        #     text_edit = QTextEdit()
-        #     text_edit.setHtml(value_text)
-        #     font = text_edit.font()
-        #     font.setPointSize(13)
-        #     text_edit.setFont(font)
-        #     text_edit.setFixedSize(550, 600)
-        #     layout = QVBoxLayout(popup_dialog)
-        #     layout.addWidget(button)
-        #     layout.addWidget(text_edit)
-        #     button.clicked.connect(lambda: self.storage.play_sound(word_dict["pronunciation"]))
-        #     popup_dialog.setLayout(layout)
-        #     text_edit.mousePressEvent = lambda event: popup_dialog.reject()
-        #     popup_dialog.exec_()
         pop = MyPopup(item.text(0), self.storage)
         pop.exec_()
+
+    def ask_new_repetition(self):
+        while True:
+            number, ok = QInputDialog.getInt(None, "New space repetition number",
+                                            "Please enter the new repetition you want.")
+            if ok:
+                if number > 0:
+                    self.storage.config["word_repetition"] = number
+                    break
+                else:
+                    QMessageBox.warning(None, "Invalid Input", "Please enter a positive integer.")
+            else:
+                break
 
 class MyPopup(QDialog):
     def __init__(self, word, storage, parent=None):
@@ -122,7 +95,7 @@ class MyPopup(QDialog):
         self.example_textbox.setText(word_dict["example"])
         for i in range(4):
             if word_dict["common"][i]:
-                self.common_box.addItem(config["COMMOM_USAGE"][i])
+                self.common_box.addItem(self.storage.config["COMMOM_USAGE"][i])
         self.synonym_lab2.setText(word_dict["synonyms"][0])
         self.synonym_lab3.setText(word_dict["synonyms"][1])
         self.synonym_lab4.setText(word_dict["synonyms"][2])
