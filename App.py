@@ -5,6 +5,8 @@ from second import Second
 from third import Third
 from constant import *
 import json
+from playsound import playsound
+import threading
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -111,6 +113,23 @@ class Storage():
             if not att["state"]:
                 current_dict.remove(word)
 
+    def convert_readable_common(self, list):
+        common = []
+        if list[0]:
+            common.append("Formal")
+        if list[1]:
+            common.append("Informal")
+        if list[2]:
+            common.append("Written")
+        if list[3]:
+            common.append("Spoken")
+        common_str = ", ".join(common)
+        common_sen = f"{common_str} English"
+        return common_sen
+
+    def play_sound(self, path):
+        playsound(path)
+    
 
 if __name__ == '__main__':
     app = QApplication([])

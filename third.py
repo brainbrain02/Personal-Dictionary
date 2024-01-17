@@ -58,36 +58,72 @@ class Third(QWidget):
                 self.storage.current_dict.remove(key)
 
     def display_popup(self, item, column):
-        # Check if the clicked column is the second column (index 1)
-        if column == 1:
-            # Get the text from the second column
-            value_list = []
-            synonyms_list = []
-            word_dict = self.storage.dictionary[item.text(0)]
+        # # Check if the clicked column is the second column (index 1)
+        # if column == 1:
+        #     # Get the text from the second column
+        #     word_dict = self.storage.dictionary[item.text(0)]
+        #     value_list = [f"<b style='font-size: '36px';'>{item.text(0).title()}<b><br><br>"]
+        #     synonyms_list = []
 
-            for key, value in word_dict.items():
-                synonyms_list = []
-                if value and key != "state" and key != "add time" and key != "test time":  # change this line when adding the timestamp feature
-                    if key == "synonyms":
-                        for synonym in value:
-                            synonyms_list.append(synonym)
-                        synonyms = "<br>".join(synonyms_list)
-                        value_list.append(f"<b>{key.title()}:</b><br>{synonyms}<br>")
-                    else:
-                        value_list.append(f"<b>{key.title()}:</b><br>{value}<br><br>")
+        #     for key, value in word_dict.items():
+        #         synonyms_list = []
+        #         if value and key != "state" and key != "add time" and key != "test time" and key != "pronunciation":  # change this line when adding the timestamp feature
+        #             if key == "synonyms":
+        #                 for synonym in value:
+        #                     synonyms_list.append(synonym)
+        #                 synonyms = "<br>".join(synonyms_list)
+        #                 value_list.append(f"<b>{key.title()}:</b><br>{synonyms}<br><br>")
+        #             elif key == "common":
+        #                 common = self.storage.convert_readable_common(value)
+        #                 value_list.append(f"<b>{key.title()}:</b><br>{common}<br><br>")
 
-            value_text = "".join(value_list)
+        #             else:
+        #                 value_list.append(f"<b>{key.title()}:</b><br>{value}<br><br>")
 
-            # Create a window
-            popup_dialog = QDialog()
-            text_edit = QTextEdit()
-            text_edit.setHtml(value_text)
-            font = text_edit.font()
-            font.setPointSize(13)
-            text_edit.setFont(font)
-            text_edit.setFixedSize(550, 600)
-            layout = QVBoxLayout(popup_dialog)
-            layout.addWidget(text_edit)
-            popup_dialog.setLayout(layout)
-            text_edit.mousePressEvent = lambda event: popup_dialog.reject()
-            popup_dialog.exec_()
+        #     value_text = "".join(value_list)
+
+        #     # Create a window
+        #     popup_dialog = QDialog()
+        #     button = QPushButton("Pronunciation of word")
+        #     text_edit = QTextEdit()
+        #     text_edit.setHtml(value_text)
+        #     font = text_edit.font()
+        #     font.setPointSize(13)
+        #     text_edit.setFont(font)
+        #     text_edit.setFixedSize(550, 600)
+        #     layout = QVBoxLayout(popup_dialog)
+        #     layout.addWidget(button)
+        #     layout.addWidget(text_edit)
+        #     button.clicked.connect(lambda: self.storage.play_sound(word_dict["pronunciation"]))
+        #     popup_dialog.setLayout(layout)
+        #     text_edit.mousePressEvent = lambda event: popup_dialog.reject()
+        #     popup_dialog.exec_()
+        pop = MyPopup(item.text(0), self.storage)
+        pop.exec_()
+
+class MyPopup(QDialog):
+    def __init__(self, word, storage, parent=None):
+        super().__init__(parent)
+        self.storage = storage
+        uic.loadUi('your_popup_ui.ui', self)  # Replace 'your_popup_ui.ui' with your actual UI file
+        self.setWindowTitle('Popup Window')
+        self.sound_btn.clicked.connect(lambda: self.storage.play_sound(self.storage.dictionary[word]["pronunciation"]))
+        self.setup_ui(word)
+        self.def_textbox.mousePressEvent = lambda event: self.reject()
+        self.usage_textbox.mousePressEvent = lambda event: self.reject()
+        self.example_textbox.mousePressEvent = lambda event: self.reject()
+        self.mousePressEvent = lambda event: self.reject()
+
+    def setup_ui(self, word):
+        word_dict = self.storage.dictionary[word]
+        self.word_lab2.setText(word)
+        self.def_textbox.setText(word_dict["definition"])
+        self.usage_textbox.setText(word_dict["usage"])
+        self.example_textbox.setText(word_dict["example"])
+        for i in range(4):
+            if word_dict["common"][i]:
+                self.common_box.addItem(config["COMMOM_USAGE"][i])
+        self.synonym_lab2.setText(word_dict["synonyms"][0])
+        self.synonym_lab3.setText(word_dict["synonyms"][1])
+        self.synonym_lab4.setText(word_dict["synonyms"][2])
+        self.chinese_lab2.setText(word_dict["chinese"])

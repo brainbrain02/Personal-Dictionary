@@ -4,5 +4,6 @@ config = {
 "current_dict_path" : ".\Dictionary\Current Dictionary.txt",
 "wrong_word_path" : ".\Dictionary\Wrong Word.txt",
 "correct_word_path" : ".\Dictionary\Correct Word.txt",
+"COMMOM_USAGE" : ["Formal English", "Informal English", "Written English", "Spoken English"],
 "word_seperation" : 5
 }

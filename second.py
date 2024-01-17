@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
 from constant import *
 import time
+from gtts import gTTS
 
 class Second(QWidget):
     def __init__(self, storage):
@@ -18,14 +19,34 @@ class Second(QWidget):
     
     def handle_entry_enter(self, word, meaning):
         if not self.func.check_data_enterd(word, meaning):
-            self.func.append_dict_list(word, meaning)
-            self.func.add_new_word(self.word_entry.text(), self.definition_entry.toPlainText(), self.common_entry.toPlainText(),
+            self.func.append_dict_list(word)
+            common = []
+            if self.formal_chkbox.isChecked():
+                common.append(1)
+            else:
+                common.append(0)
+            if self.informal_chkbox.isChecked():
+                common.append(1)
+            else:
+                common.append(0)
+            if self.written_chkbox.isChecked():
+                common.append(1)
+            else:
+                common.append(0)
+            if self.spoken_chkbox.isChecked():
+                common.append(1)
+            else:
+                common.append(0)
+            self.func.add_new_word(self.word_entry.text(), self.definition_entry.toPlainText(), common,
                                    self.usage_entry.toPlainText(), self.example_entry.toPlainText(), self.chinese_entry.toPlainText(),
                                    [self.synonym_entry1.toPlainText(), self.synonym_entry2.toPlainText(), self.synonym_entry3.toPlainText()]
                                    )
             self.word_entry.clear()
             self.definition_entry.clear()
-            self.common_entry.clear()
+            self.formal_chkbox.setChecked(False)
+            self.informal_chkbox.setChecked(False)
+            self.written_chkbox.setChecked(False)
+            self.spoken_chkbox.setChecked(False)
             self.usage_entry.clear()
             self.example_entry.clear()
             self.chinese_entry.clear()
@@ -54,7 +75,7 @@ class DictEditFunction():
             message.exec_()
             return True
     
-    def append_dict_list(self, word, meaning):
+    def append_dict_list(self, word):
         self.storage.current_dict.append(word)
 
     def check_word_appear(self, word):
@@ -64,6 +85,8 @@ class DictEditFunction():
         return
 
     def add_new_word(self, word, defin, common, usage, example, chinese, syn):
+        path = self.text_to_speech(word)
+        self.storage.play_sound(path)
         temp_dict = {
             "definition" : defin,
             "common" : common,
@@ -73,6 +96,14 @@ class DictEditFunction():
             "synonyms" : syn,
             "state" : 1,
             "add time" : time.strftime("%Y-%m-%d", time.localtime(time.time())),
-            "test time" : time.strftime("%Y-%m-%d", time.localtime(time.time()))
+            "test time" : time.strftime("%Y-%m-%d", time.localtime(time.time())),
+            "pronunciation" : path
         }
         self.storage.dictionary[word] = temp_dict
+
+    def text_to_speech(self, word):
+        speech = gTTS(text = word)
+        path = f".//Sound Track//{word}.mp3"
+        speech.save(path)
+        return path
+    

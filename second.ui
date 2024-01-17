@@ -55,8 +55,8 @@
   <widget class="QPushButton" name="enter_btn">
    <property name="geometry">
     <rect>
-     <x>640</x>
-     <y>250</y>
+     <x>400</x>
+     <y>430</y>
      <width>131</width>
      <height>41</height>
     </rect>
@@ -147,31 +147,13 @@
     <string>Please enter the chinese translation here</string>
    </property>
   </widget>
-  <widget class="QTextEdit" name="common_entry">
-   <property name="geometry">
-    <rect>
-     <x>310</x>
-     <y>410</y>
-     <width>311</width>
-     <height>71</height>
-    </rect>
-   </property>
-   <property name="font">
-    <font>
-     <pointsize>14</pointsize>
-    </font>
-   </property>
-   <property name="placeholderText">
-    <string>Please enter the common usage here</string>
-   </property>
-  </widget>
-  <widget class="QWidget" name="">
+  <widget class="QWidget" name="layoutWidget">
    <property name="geometry">
     <rect>
      <x>640</x>
      <y>20</y>
      <width>131</width>
-     <height>201</height>
+     <height>227</height>
     </rect>
    </property>
    <layout class="QVBoxLayout" name="verticalLayout">
@@ -208,6 +190,72 @@
       </property>
       <property name="placeholderText">
        <string>Synonym 3</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QWidget" name="">
+   <property name="geometry">
+    <rect>
+     <x>630</x>
+     <y>250</y>
+     <width>151</width>
+     <height>161</height>
+    </rect>
+   </property>
+   <layout class="QVBoxLayout" name="verticalLayout_2">
+    <item>
+     <widget class="QCheckBox" name="formal_chkbox">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <weight>50</weight>
+        <italic>true</italic>
+        <bold>false</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Formal English</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="informal_chkbox">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>Informal English</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="written_chkbox">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>Written English</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QCheckBox" name="spoken_chkbox">
+      <property name="font">
+       <font>
+        <pointsize>13</pointsize>
+        <italic>true</italic>
+       </font>
+      </property>
+      <property name="text">
+       <string>Spoken English</string>
       </property>
      </widget>
     </item>
