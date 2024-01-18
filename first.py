@@ -1,6 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
+from PyQt5.QtGui import QFont
 import random
 
 class First(QWidget):
@@ -49,10 +50,11 @@ class First(QWidget):
             # Check answer correctness
             word = self.func.check_ans_correct(ans)
             if word:
+                self.storage.play_sound(self.storage.dictionary[word]["pronunciation"])
+                chinese = self.storage.dictionary[word]["chinese"]
                 self.func.show_message_box(
-                    f"Wrong Answer!\nThe answer should be: {word}\n"
+                    f"Wrong Answer!\nThe answer should be: {word} ({chinese})\n"
                     )
-                
             self.ans_entry.clear()
             self.storage.current_dict.remove(self.func.word)
             self.storage.handle_empty_dict(self.storage.dictionary)
@@ -67,10 +69,13 @@ class First(QWidget):
                 message.exec_()
 
     def eventFilter(self, obj, event):
-        if obj == self.ans_entry and event.type() == event.KeyPress \
-            and event.key() == Qt.Key_Return:
-            self.handle_ans_enter(self.ans_entry.text())
-            return True
+        if obj == self.ans_entry and event.type() == event.KeyPress:
+            if event.key() == Qt.Key_Return:
+                self.handle_ans_enter(self.ans_entry.text())
+                return True
+            elif event.key() == Qt.Key_Backslash:
+                self.handle_ans_enter("idk")
+                return True
         return super().eventFilter(obj, event)
 
 class FlashCardFunction():
@@ -111,6 +116,10 @@ class FlashCardFunction():
     def show_message_box(self, msg):
         message_box = QMessageBox()
         message_box.setText(msg)
+        font = QFont()
+        font.setPointSize(12)  # Set the desired font size
+        # Apply the font to the message box
+        message_box.setFont(font)
         message_box.exec_()
         # Close the message box after 2 seconds
         QTimer.singleShot(2000, lambda: message_box.done(QMessageBox.Ok))

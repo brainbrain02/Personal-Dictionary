@@ -24,6 +24,7 @@ class MainWindow(QMainWindow):
 
     def go_to_first(self):
         self.first.ans_entry.clear()
+        self.storage.handle_empty_dict(self.storage.dictionary)
         current_word = self.first.func.choose_word(self.storage.current_dict)
         if current_word:
             self.first.update_word_information(current_word)
@@ -111,6 +112,7 @@ class Storage():
             elif self.correct_answer_list and not self.wrong_answer_list:
                 self.current_dict = self.correct_answer_list[:]
                 self.correct_answer_list = []
+                QMessageBox.warning(None, "Congratulation!", "You have completed all flash cards.")
             elif self.correct_answer_list and self.wrong_answer_list:
                 self.current_dict = self.correct_answer_list[:]
                 self.correct_answer_list = []

@@ -90,7 +90,7 @@
     <bool>false</bool>
    </attribute>
    <attribute name="headerStretchLastSection">
-    <bool>false</bool>
+    <bool>true</bool>
    </attribute>
    <column>
     <property name="text">
@@ -156,6 +156,26 @@
    </property>
    <property name="text">
     <string>Configuration</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="check_all_btn">
+   <property name="geometry">
+    <rect>
+     <x>160</x>
+     <y>440</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Check All</string>
    </property>
   </widget>
  </widget>

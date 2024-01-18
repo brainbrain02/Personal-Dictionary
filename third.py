@@ -6,8 +6,8 @@ class Third(QWidget):
     def __init__(self, storage):
         super().__init__()
         uic.loadUi('third.ui', self)
-        self.display.setColumnWidth(0, 200)
-        self.display.setColumnWidth(1, 500)
+        self.display.setColumnWidth(0, 190)
+        self.display.setColumnWidth(1, 490)
         self.display.setColumnWidth(2, 59)
         
         ### Main function setup
@@ -17,6 +17,7 @@ class Third(QWidget):
         self.populate_tree(self.display, self.storage.dictionary)
         self.display.itemClicked.connect(self.display_popup)
         self.config_btn.clicked.connect(self.ask_new_repetition)
+        self.check_all_btn.clicked.connect(self.tick_all_checkbox)
         
     def add_tree_item(self, parent_text, item_data):
         parent_item = self.find_tree_item(parent_text)
@@ -40,31 +41,45 @@ class Third(QWidget):
     def checkbox_state_changed(self, state, key):
         sender_checkbox = self.sender()
         item = self.display.itemAt(sender_checkbox.pos())
+        total = len(self.storage.current_dict) + len(self.storage.correct_answer_list) \
+                + len(self.storage.wrong_answer_list)
         if item is not None:
             # Use assignment, not equality check
-            if not state and len(self.storage.current_dict) == 1:
+            if not state and total == 1:
                 message = QMessageBox()
                 message.setText("The testing flash card database must have at least 1 word!")
                 message.exec_()
                 # Use setChecked to change the checkbox state
                 sender_checkbox.setChecked(True)
                 return
-            # Update the state regardless of the condition
-            self.storage.dictionary[key]["state"] = state
-            # Update the current_dict based on the state
-            if state and key not in self.storage.current_dict:
-                self.storage.current_dict.append(key)
-            elif not state and key in self.storage.current_dict:
-                self.storage.current_dict.remove(key)
+            self.change_word_state(key, state)
+            
+    
+    def change_word_state(self, word, state):
+        # Update the state regardless of the condition
+        self.storage.dictionary[word]["state"] = state
+        # Update the current_dict based on the state
+        if state and word not in self.storage.current_dict:
+            self.storage.current_dict.append(word)
+        elif not state and word in self.storage.current_dict:
+            self.storage.current_dict.remove(word)
+        elif not state and word in self.storage.wrong_answer_list:
+            self.storage.wrong_answer_list.remove(word)
+        elif not state and word in self.storage.correct_answer_list:
+            self.storage.correct_answer_list.remove(word)
+        self.storage.handle_empty_dict(self.storage.dictionary)
+
 
     def display_popup(self, item, column):
-        pop = MyPopup(item.text(0), self.storage)
-        pop.exec_()
+        if column == 1:
+            pop = MyPopup(item.text(0), self.storage)
+            pop.exec_()
 
     def ask_new_repetition(self):
         while True:
+            current = self.storage.config["word_repetition"]
             number, ok = QInputDialog.getInt(None, "New space repetition number",
-                                            "Please enter the new repetition you want.")
+                                            f"The current repetition is {current}\nPlease enter the new repetition you want.")
             if ok:
                 if number > 0:
                     self.storage.config["word_repetition"] = number
@@ -73,7 +88,18 @@ class Third(QWidget):
                     QMessageBox.warning(None, "Invalid Input", "Please enter a positive integer.")
             else:
                 break
-
+    
+    def tick_all_checkbox(self):
+        for top_level_item_index in range(self.display.topLevelItemCount()):
+            top_level_item = self.display.topLevelItem(top_level_item_index)
+            # Assuming checkbox is in the third column (column index 2)
+            checkbox = self.display.itemWidget(top_level_item, 2)
+            if checkbox and isinstance(checkbox, QCheckBox):
+                checkbox.setChecked(True)
+                self.change_word_state(top_level_item.text(0), 1)
+            else:
+                print(f"No valid checkbox found for top-level item {top_level_item_index}")
+        
 class MyPopup(QDialog):
     def __init__(self, word, storage, parent=None):
         super().__init__(parent)
@@ -96,7 +122,7 @@ class MyPopup(QDialog):
         for i in range(4):
             if word_dict["common"][i]:
                 self.common_box.addItem(self.storage.config["COMMOM_USAGE"][i])
-        self.synonym_lab2.setText(word_dict["synonyms"][0])
-        self.synonym_lab3.setText(word_dict["synonyms"][1])
-        self.synonym_lab4.setText(word_dict["synonyms"][2])
+        self.synonym_lab2.setText(word_dict["synonyms"][0].title())
+        self.synonym_lab3.setText(word_dict["synonyms"][1].title())
+        self.synonym_lab4.setText(word_dict["synonyms"][2].title())
         self.chinese_lab2.setText(word_dict["chinese"])
