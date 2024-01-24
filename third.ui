@@ -37,9 +37,9 @@
    <property name="geometry">
     <rect>
      <x>10</x>
-     <y>20</y>
+     <y>60</y>
      <width>761</width>
-     <height>411</height>
+     <height>371</height>
     </rect>
    </property>
    <property name="font">
@@ -176,6 +176,44 @@
    </property>
    <property name="text">
     <string>Check All</string>
+   </property>
+  </widget>
+  <widget class="QLineEdit" name="search_bar">
+   <property name="geometry">
+    <rect>
+     <x>10</x>
+     <y>10</y>
+     <width>401</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>14</pointsize>
+    </font>
+   </property>
+   <property name="placeholderText">
+    <string>Please enter the searching word here.</string>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="check_date_btn">
+   <property name="geometry">
+    <rect>
+     <x>310</x>
+     <y>440</y>
+     <width>131</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <pointsize>12</pointsize>
+     <weight>75</weight>
+     <bold>true</bold>
+    </font>
+   </property>
+   <property name="text">
+    <string>Date</string>
    </property>
   </widget>
  </widget>

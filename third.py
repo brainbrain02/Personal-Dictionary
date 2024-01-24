@@ -1,6 +1,7 @@
 from PyQt5 import uic
 from PyQt5.QtWidgets import *
 from PyQt5.QtCore import *
+from datetime import datetime
 
 class Third(QWidget):
     def __init__(self, storage):
@@ -18,6 +19,8 @@ class Third(QWidget):
         self.display.itemClicked.connect(self.display_popup)
         self.config_btn.clicked.connect(self.ask_new_repetition)
         self.check_all_btn.clicked.connect(self.tick_all_checkbox)
+        self.search_bar.textChanged.connect(self.filter_tree)
+        self.check_date_btn.clicked.connect(self.tick_checkbox_after)
         
     def add_tree_item(self, parent_text, item_data):
         parent_item = self.find_tree_item(parent_text)
@@ -99,6 +102,34 @@ class Third(QWidget):
                 self.change_word_state(top_level_item.text(0), 1)
             else:
                 print(f"No valid checkbox found for top-level item {top_level_item_index}")
+    
+    def tick_checkbox_after(self):
+        dialog = CalendarDialog(self.storage)
+        dialog.exec_()
+        dates = dialog.get_dates()
+        if dates:
+            for index in range(self.display.topLevelItemCount()):
+                item = self.display.topLevelItem(index)
+                word = item.text(0)
+                checkbox = self.display.itemWidget(item, 2)
+                if word in dates:
+                # Assuming checkbox is in the third column (column index 2)
+                    if isinstance(checkbox, QCheckBox):
+                        checkbox.setChecked(True)
+                        self.change_word_state(item.text(0), 1)
+                else:
+                    if isinstance(checkbox, QCheckBox):
+                        checkbox.setChecked(False)
+                        self.change_word_state(item.text(0), 0)
+
+        
+
+    def filter_tree(self):
+        search_text = self.search_bar.text().lower()
+        for i in range(self.display.topLevelItemCount()):
+            item = self.display.topLevelItem(i)
+            word = item.text(0).lower()
+            item.setHidden(search_text not in word)
         
 class MyPopup(QDialog):
     def __init__(self, word, storage, parent=None):
@@ -126,3 +157,33 @@ class MyPopup(QDialog):
         self.synonym_lab3.setText(word_dict["synonyms"][1].title())
         self.synonym_lab4.setText(word_dict["synonyms"][2].title())
         self.chinese_lab2.setText(word_dict["chinese"])
+
+class CalendarDialog(QDialog):
+    def __init__(self, storage):
+        super().__init__()
+        # Load the UI file
+        uic.loadUi('calendar.ui', self)
+        self.storage = storage
+        self.dates = []
+        # Connect the selectionChanged signal to the on_date_selected slot
+        self.calendar.selectionChanged.connect(self.on_date_selected)
+
+    def on_date_selected(self):
+        selected_date = self.calendar.selectedDate()
+        date = selected_date.toString('yyyy-MM-dd')
+        self.date = datetime.strptime(date, "%Y-%m-%d").date()
+        self.dates = self.find_word(self.date)
+        self.accept()
+
+    def find_word(self, target):
+        dates = []
+        for word, detail in self.storage.dictionary.items():
+            date = datetime.strptime(detail["add time"], "%Y-%m-%d").date()
+            if target < date:
+                dates.append(word)
+        return dates
+    
+    def get_dates(self):
+        if self.dates:
+            return self.dates
+        return

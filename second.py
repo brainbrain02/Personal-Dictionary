@@ -15,6 +15,7 @@ class Second(QWidget):
         # Check answer box is empty
         self.enter_btn.clicked.connect(lambda: self.handle_entry_enter(
             self.word_entry.text(), self.definition_entry.toPlainText()))
+        self.save_btn.clicked.connect(lambda: self.storage.write_json_file(self.storage.config["dict_path"], self.storage.dictionary))
     
     def handle_entry_enter(self, word, meaning):
         if not self.func.check_data_enterd(word, meaning):
@@ -36,7 +37,7 @@ class Second(QWidget):
                 common.append(1)
             else:
                 common.append(0)
-            self.func.add_new_word(self.word_entry.text(), self.definition_entry.toPlainText(), common,
+            self.func.add_new_word(self.word_entry.text().title(), self.definition_entry.toPlainText(), common,
                                    self.usage_entry.toPlainText(), self.example_entry.toPlainText(), self.chinese_entry.toPlainText(),
                                    [self.synonym_entry1.toPlainText(), self.synonym_entry2.toPlainText(), self.synonym_entry3.toPlainText()]
                                    )
@@ -101,8 +102,11 @@ class DictEditFunction():
         self.storage.dictionary[word] = temp_dict
 
     def text_to_speech(self, word):
-        speech = gTTS(text = word)
-        path = f".//Sound Track//{word}.mp3"
-        speech.save(path)
-        return path
-    
+        try:
+            speech = gTTS(text = word)
+            path = f".//Sound Track//{word}.mp3"
+            speech.save(path)
+            return path
+        except Exception as e:
+            error_msg = f"An error occurred: {str(e)}\nPlease check the word entered."
+            QMessageBox.critical(self, "Error", error_msg)

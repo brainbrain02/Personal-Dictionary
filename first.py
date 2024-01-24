@@ -144,3 +144,4 @@ class FlashCardFunction():
                 self.storage.dictionary[self.word].get("synonyms"),
                 self.storage.dictionary[self.word].get("pronunciation")
             ]
+

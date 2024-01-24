@@ -9,7 +9,7 @@ from playsound import playsound
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
-        # Create main window and pages
+        # Create main window and page   s
         uic.loadUi('pages.ui', self)
         self.storage = Storage()
         self.first = First(self.storage)
@@ -23,7 +23,11 @@ class MainWindow(QMainWindow):
         self.third.change_btn.clicked.connect(self.go_to_first)
 
     def go_to_first(self):
+        self.storage.write_json_file(self.storage.config["dict_path"], self.storage.dictionary)
         self.first.ans_entry.clear()
+        self.storage.current_dict = []
+        self.storage.correct_answer_list = []
+        self.storage.wrong_answer_list = []
         self.storage.handle_empty_dict(self.storage.dictionary)
         current_word = self.first.func.choose_word(self.storage.current_dict)
         if current_word:
